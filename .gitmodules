@@ -1,0 +1,3 @@
+[submodule "usefull-php"]
+	path = usefull-php
+	url = git@gitlab.com:WackyWouter/usefull-php.git
