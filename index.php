@@ -43,13 +43,13 @@ if (isset($_POST['action'])) {
             echo Account::changeUsername();
             break;
         case 'addFav':
-            echo "addFav";
+            echo Fav::addFav();
             break;
         case 'deleteFav':
-            echo "deleteFav";
+            echo Fav::deleteFav();
             break;
         case 'getFav':
-            echo "getFav";
+            echo Fav::getFav();
             break;
         default:
             exit('404 call not found');

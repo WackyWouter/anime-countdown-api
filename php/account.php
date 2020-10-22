@@ -9,9 +9,6 @@ class Account{
         $password = $_POST['password'];
         $username = $_POST['username'];
 
-        $user = null;
-
-
         // check if username already exists
         self::checkUsernameExists($username);
 
@@ -49,6 +46,7 @@ class Account{
             header("Server error", true, 500);
             exit;
         }    
+        $stmt->close();
 
         return json_encode(['status' => 'ok', 'token'=> $token]);
     }
@@ -78,10 +76,12 @@ class Account{
                 $stmt->fetch();
                 if(self::checkPassword($uuid, $password)){
                     $token = self::updateToken($uuid);
+                    $stmt->close();
                     return json_encode(['status' => 'ok', 'token' => $token]);
                 }
             }           
         }
+        $stmt->close();
 
         return json_encode(['status' => 'nok', 'error' => 'Password or Username is wrong']);
         
@@ -99,19 +99,7 @@ class Account{
         }
         $token = $_POST['token'];
 
-        $uuid = null;
-
-        $stmt = up_database::prepare('SELECT uuid FROM users WHERE token = ?');
-        $stmt->bind_param('s', $token);
-        $stmt->execute();
-        $stmt->bind_result($uuid);
-        $stmt->fetch();
-        if($stmt->error != null){
-            $stmt->close();
-            header("Server error", true, 500);
-            exit;
-        }
-        $stmt->close();
+        $uuid = self::getUuidByToken($token);
 
         // check if old passwords match
         if(!self::checkPassword($uuid, $oldPassword)){
@@ -214,6 +202,27 @@ class Account{
         else{
             return true;
         }
+    }
+
+    public static function getUuidByToken($token){
+        $uuid = null;
+
+        $stmt = up_database::prepare('SELECT uuid FROM users WHERE token = ?');
+        $stmt->bind_param('s', $token);
+        $stmt->execute();
+        $stmt->bind_result($uuid);
+        $stmt->fetch();
+        if($stmt->error != null){
+            $stmt->close();
+            header("Server error", true, 500);
+            exit;
+        }
+        $stmt->close();
+
+        if($uuid == null){
+            return json_encode(['status' => 'nok', 'error' => 'user not found']);
+        }
+        return $uuid;
     }
 
     private static function createToken(){
