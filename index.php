@@ -9,8 +9,7 @@ require_once 'php/request.php';
 $data = json_decode(file_get_contents('php://input'), true);
 
 if (!$_SERVER['REQUEST_METHOD'] === 'POST') {
-    echo "test";
-    header("HTTP/1.1 400 Faulty request");
+    header("HTTP/1.1 400 Faulty request method");
     exit;
 }
 
@@ -55,5 +54,5 @@ if (isset($_POST['action'])) {
             exit('404 call not found');
     }
 }else{
-    header("HTTP/1.1 400 Faulty request");
+    header("HTTP/1.1 404 request not found");
 }
