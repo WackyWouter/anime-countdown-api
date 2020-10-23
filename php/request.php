@@ -26,18 +26,6 @@ class Request{
         }
     }
 
-    public static function token(){
-        Request::checkRequest(['token']);
-
-        if(self::checkToken($_POST['token'])){
-            return json_encode(['status' => 'ok']);
-        }else{
-            return json_encode(['status' => 'nok', 'error' => 'token expired']);
-        }
-
-    }
-
-
     public static function checkToken($token){
         $token_db = null;
         $token_db_expire = null;

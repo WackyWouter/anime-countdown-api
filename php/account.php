@@ -161,5 +161,16 @@ class Account{
         return json_encode(['status' => 'ok']);
     }
 
+    public static function token(){
+        Request::checkRequest(['token']);
+
+        if(Request::checkToken($_POST['token'])){
+            return json_encode(['status' => 'ok']);
+        }else{
+            return json_encode(['status' => 'nok', 'error' => 'token expired']);
+        }
+
+    }
+
     
 }
