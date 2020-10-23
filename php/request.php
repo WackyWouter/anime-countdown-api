@@ -1,6 +1,7 @@
 <?php
 
 class Request{
+    public static $data = null;
     
     public static function decrypt($text){
         return openssl_decrypt($text, METHOD, KEY, 0, IV);
@@ -8,18 +9,18 @@ class Request{
 
     public static function checkRequest(array $requiredPostArr)
     {
-        if(!isset($_POST['app_uuid'])){
+        if(!isset(self::$data['app_uuid'])){
             header("No app_uuid found", true, 400);
             exit;
         }else{
-            if($_POST['app_uuid'] != APP_UUID){
+            if(self::$data['app_uuid'] != APP_UUID){
                 header("Faulty app_uuid found", true, 400);
                 exit;
             }
         }
 
         foreach($requiredPostArr as $var){
-            if(!isset($_POST[$var])){
+            if(!isset(self::$data[$var])){
                 header('Missing ' + $var, true, 400);
                 exit;
             }

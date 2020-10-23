@@ -6,10 +6,10 @@ class Fav{
         Request::checkRequest(['token', 'anilistId']);
 
         // check token
-        if(!Request::checkToken($_POST['token'])){
+        if(!Request::checkToken(Request::$data['token'])){
             return json_encode(['status' => 'nok', 'error' => 'token expired']);
         }
-        $token = $_POST['token'];
+        $token = Request::$data['token'];
 
         $uuid = Request::getUuidByToken($token);
 
@@ -18,7 +18,7 @@ class Fav{
                                             anilist_id
                                             )
                                         VALUES (?, ?) ON DUPLICATE KEY UPDATE id=id');
-        $stmt->bind_param('si', $uuid, $_POST['anilistId']);
+        $stmt->bind_param('si', $uuid, Request::$data['anilistId']);
         $stmt->execute();
         if($stmt->error != null){
             $stmt->close();
@@ -35,15 +35,15 @@ class Fav{
         Request::checkRequest(['token', 'anilistId']);
 
         // check token
-        if(!Request::checkToken($_POST['token'])){
+        if(!Request::checkToken(Request::$data['token'])){
             return json_encode(['status' => 'nok', 'error' => 'token expired']);
         }
-        $token = $_POST['token'];
+        $token = Request::$data['token'];
 
         $uuid = Request::getUuidByToken($token);
 
         $stmt = up_database::prepare("DELETE FROM user_fav WHERE user_uuid = ? AND anilist_id = ? ");
-        $stmt->bind_param('si', $uuid, $_POST['anilistId']);
+        $stmt->bind_param('si', $uuid, Request::$data['anilistId']);
         $stmt->execute();
         if($stmt->error != null){
             $stmt->close();
@@ -60,10 +60,10 @@ class Fav{
         Request::checkRequest(['token']);
 
         // check token
-        if(!Request::checkToken($_POST['token'])){
+        if(!Request::checkToken(Request::$data['token'])){
             return json_encode(['status' => 'nok', 'error' => 'token expired']);
         }
-        $token = $_POST['token'];
+        $token = Request::$data['token'];
 
         $uuid = Request::getUuidByToken($token);
         $animeIdArr = [];

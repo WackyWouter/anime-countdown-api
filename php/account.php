@@ -6,8 +6,8 @@ class Account{
         Request::checkRequest(['username', 'password']);
 
         // decrypt flutter username and password
-        $password = Request::decrypt($_POST['password']);
-        $username = Request::decrypt($_POST['username']);
+        $password = Request::decrypt(Request::$data['password']);
+        $username = Request::decrypt(Request::$data['username']);
 
         // check if username already exists
         Request::checkUsernameExists($username);
@@ -55,8 +55,8 @@ class Account{
         Request::checkRequest(['username', 'password']);
 
         // decrypt flutter username and password
-        $password = Request::decrypt($_POST['password']);
-        $username = Request::decrypt($_POST['username']);
+        $password = Request::decrypt(Request::$data['password']);
+        $username = Request::decrypt(Request::$data['username']);
 
         if ($stmt = up_database::prepare('SELECT 
                                                 uuid
@@ -91,13 +91,13 @@ class Account{
         Request::checkRequest(['oldPassword', 'newPassword', 'token']);
 
         // decrypt flutter oldPassword and newPassword
-        $oldPassword = Request::decrypt($_POST['oldPassword']);
-        $newPassword = Request::decrypt($_POST['newPassword']);
+        $oldPassword = Request::decrypt(Request::$data['oldPassword']);
+        $newPassword = Request::decrypt(Request::$data['newPassword']);
 
-        if(!Request::checkToken($_POST['token'])){
+        if(!Request::checkToken(Request::$data['token'])){
             return json_encode(['status' => 'nok', 'error' => 'token expired']);
         }
-        $token = $_POST['token'];
+        $token = Request::$data['token'];
 
         $uuid = Request::getUuidByToken($token);
 
@@ -131,13 +131,13 @@ class Account{
         Request::checkRequest(['username', 'token']);
 
         // decrypt flutter username
-        $username = Request::decrypt($_POST['username']);
+        $username = Request::decrypt(Request::$data['username']);
 
         // check token
-        if(!Request::checkToken($_POST['token'])){
+        if(!Request::checkToken(Request::$data['token'])){
             return json_encode(['status' => 'nok', 'error' => 'token expired']);
         }
-        $token = $_POST['token'];
+        $token = Request::$data['token'];
 
         // check if username already exists
         Request::checkUsernameExists($username);
@@ -164,7 +164,7 @@ class Account{
     public static function token(){
         Request::checkRequest(['token']);
 
-        if(Request::checkToken($_POST['token'])){
+        if(Request::checkToken(Request::$data['token'])){
             return json_encode(['status' => 'ok']);
         }else{
             return json_encode(['status' => 'nok', 'error' => 'token expired']);
